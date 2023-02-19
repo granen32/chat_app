@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
+import { useInput } from "@hooks/useInput";
+import axios from "axios";
 import {
   Success,
   Form,
@@ -11,15 +13,51 @@ import {
   Header,
 } from "./style";
 const SignUp = () => {
-  const [email] = useState("");
-  const [nickname] = useState("");
-  const [password] = useState("");
-  const [passwordCheck] = useState("");
-  const onChangeEmail = useCallback(() => {}, []);
-  const onChangeNickname = useCallback(() => {}, []);
-  const onChangePassword = useCallback(() => {}, []);
-  const onChangePasswordCheck = useCallback(() => {}, []);
-  const onSubmit = useCallback(() => {}, []);
+  const [email, onChangeEmail] = useInput("");
+  const [nickname, onChangeNickname] = useInput("");
+  const [password, setPassword] = useState("");
+  const [passwordCheck, setPasswordCheck] = useState("");
+  const [mismatchError, setMismatchError] = useState(false);
+
+  const onChangePassword = useCallback(
+    (e) => {
+      setPassword(e.target.value);
+      setMismatchError(e.target.value !== passwordCheck);
+    },
+    [password]
+  );
+  const onChangePasswordCheck = useCallback(
+    (e) => {
+      setPasswordCheck(e.target.value);
+      setMismatchError(e.target.value !== password);
+    },
+    [passwordCheck]
+  );
+  // 디펜더시는 외부변수에 할당하는게 좋음 내부변수는 XX
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      console.log(email, nickname, password, passwordCheck);
+      if (!mismatchError && nickname) {
+        console.log("서버로 전송");
+        axios
+          .post("http://localhost:3095/api/users", {
+            email,
+            nickname,
+            password,
+          })
+          .then((response) => {
+            console.log(response);
+          }) // promise 성공
+          .catch((error) => {
+            console.log(error.response);
+          }) // promise 실패
+          .finally(() => {}); // promise 성공하든 실패하든 무조건
+      }
+    },
+
+    [email, nickname, password, passwordCheck, mismatchError]
+  );
   return (
     <div id="container">
       <Header>Sleact</Header>
@@ -71,12 +109,12 @@ const SignUp = () => {
               onChange={onChangePasswordCheck}
             />
           </div>
-          {/* {mismatchError && <Error>비밀번호가 일치하지 않습니다.</Error>}
+          {mismatchError && <Error>비밀번호가 일치하지 않습니다.</Error>}
           {!nickname && <Error>닉네임을 입력해주세요.</Error>}
-          {signUpError && <Error>{signUpError}</Error>}
+          {/* {signUpError && <Error>{signUpError}</Error>}
           {signUpSuccess && (
             <Success>회원가입되었습니다! 로그인해주세요.</Success>
-          )} */}
+          )}  */}
         </Label>
         <Button type="submit">회원가입</Button>
       </Form>

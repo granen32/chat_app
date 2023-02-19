@@ -49,7 +49,22 @@ const config: Configuration = {
           ],
           env: {
             development: {
-              plugins: [require.resolve("react-refresh/babel")],
+              plugins: [
+                [
+                  "@emotion",
+                  {
+                    // sourceMap is on by default but source maps are dead code eliminated in production
+                    sourceMap: true,
+                    autoLabel: "dev-only",
+                    labelFormat: "[local]",
+                    cssPropOptimization: true,
+                  },
+                ],
+                require.resolve("react-refresh/babel"),
+              ],
+            },
+            production: {
+              plugins: ["@emotion"],
             },
           },
         },
