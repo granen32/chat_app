@@ -18,6 +18,9 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [mismatchError, setMismatchError] = useState(false);
+  const [signUpSuccess, setSignUpSuccess] = useState(false);
+  // 초기 스테이트는 빈문자열 false등이 낫다.
+  const [signUpError, setSignUpError] = useState("");
 
   const onChangePassword = useCallback(
     (e) => {
@@ -40,17 +43,23 @@ const SignUp = () => {
       console.log(email, nickname, password, passwordCheck);
       if (!mismatchError && nickname) {
         console.log("서버로 전송");
+        setSignUpError("");
+        setSignUpSuccess(false);
+        // 비동기 처리전에 보통 초기화 작업을 진행하는 게 좋음
         axios
-          .post("http://localhost:3095/api/users", {
+          // 로럴호스트 3090 -> 3095로 api 보내는 거임
+          .post("/api/users", {
             email,
             nickname,
             password,
           })
           .then((response) => {
             console.log(response);
+            setSignUpSuccess(true);
           }) // promise 성공
           .catch((error) => {
             console.log(error.response);
+            setSignUpError(error.response.data);
           }) // promise 실패
           .finally(() => {}); // promise 성공하든 실패하든 무조건
       }
@@ -111,10 +120,10 @@ const SignUp = () => {
           </div>
           {mismatchError && <Error>비밀번호가 일치하지 않습니다.</Error>}
           {!nickname && <Error>닉네임을 입력해주세요.</Error>}
-          {/* {signUpError && <Error>{signUpError}</Error>}
+          {signUpError && <Error>{signUpError}</Error>}
           {signUpSuccess && (
             <Success>회원가입되었습니다! 로그인해주세요.</Success>
-          )}  */}
+          )}
         </Label>
         <Button type="submit">회원가입</Button>
       </Form>
