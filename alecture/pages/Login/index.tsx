@@ -40,7 +40,10 @@ const LogIn = () => {
         )
         .then((response) => {
           console.log(response);
-          mutate();
+          // swr 같은 경우 요청을 자주 보냄
+          // 옵티미스틱 UI -> 낙관적인 UI 내가 보내는 요청이 일단은 가동이 되고 나서 요청을 보냄
+          // 패시미스틱 uI -> 일단 실패했다는 전제하에 요청을 보내고 그 이후에 true면 요청을 보냄
+          mutate(response.data, false);
         })
         .catch((error) => {
           setLogInError(error.response?.data?.statusCode === 401);
@@ -54,7 +57,7 @@ const LogIn = () => {
   }
 
   if (data) {
-    return <Redirect to="/workspace/sleact/channel/일반" />;
+    return <Redirect to="/workspace/channel" />;
   }
   return (
     <div id="container">

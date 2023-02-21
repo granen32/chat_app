@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { useInput } from "@hooks/useInput";
 import axios from "axios";
 import {
@@ -12,7 +12,14 @@ import {
   Button,
   Header,
 } from "./style";
+import fetcher from "@utils/fetcher";
+import useSWR from "swr";
 const SignUp = () => {
+  // 첫번째는 주소를 받고 그 이후에 함수로 전달됨
+  const { data, error, mutate } = useSWR("/api/users", fetcher, {
+    // 불러오는 인터벌을 길게 늘려줌
+    dedupingInterval: 100000,
+  });
   const [email, onChangeEmail] = useInput("");
   const [nickname, onChangeNickname] = useInput("");
   const [password, setPassword] = useState("");
@@ -67,6 +74,11 @@ const SignUp = () => {
 
     [email, nickname, password, passwordCheck, mismatchError]
   );
+
+  // return은 무조건 훅스 아래에
+  if (data) {
+    return <Redirect to="/workspace/channel" />;
+  }
   return (
     <div id="container">
       <Header>Sleact</Header>
