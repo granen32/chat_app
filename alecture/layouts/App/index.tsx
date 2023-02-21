@@ -4,16 +4,17 @@ import { Route, Switch, Redirect } from "react-router-dom";
 
 const Login = loadable(() => import("@pages/Login"));
 const SignUp = loadable(() => import("@pages/SignUp"));
-const Channel = loadable(() => import("@pages/Channel"));
+const Workspace = loadable(() => import("@layouts/Workspace"));
 
 const App = () => {
+  // 라우트에 등록이 되야만 페이지가 보임
   return (
     <>
       <Switch>
         <Redirect exact path="/" to="/login" />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={SignUp} />
-        <Route path="/workspace/channel" component={Channel} />
+        <Route path="/workspace/:workspace" component={Workspace} />
       </Switch>
     </>
   );

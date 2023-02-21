@@ -30,20 +30,13 @@ const LogIn = () => {
       axios
         .post(
           "/api/users/login",
-          {
-            email,
-            password,
-          },
+          { email, password },
           {
             withCredentials: true,
           }
         )
         .then((response) => {
-          console.log(response);
-          // swr 같은 경우 요청을 자주 보냄
-          // 옵티미스틱 UI -> 낙관적인 UI 내가 보내는 요청이 일단은 가동이 되고 나서 요청을 보냄
-          // 패시미스틱 uI -> 일단 실패했다는 전제하에 요청을 보내고 그 이후에 true면 요청을 보냄
-          mutate(response.data, false);
+          mutate();
         })
         .catch((error) => {
           setLogInError(error.response?.data?.statusCode === 401);
@@ -57,7 +50,7 @@ const LogIn = () => {
   }
 
   if (data) {
-    return <Redirect to="/workspace/channel" />;
+    return <Redirect to="/workspace/sleact/channel/일반" />;
   }
   return (
     <div id="container">

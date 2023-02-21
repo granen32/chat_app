@@ -1,13 +1,13 @@
 import React from "react";
 import { Container, Header } from "@pages/Channel/style";
-const Channel = () => {
+const DirectMessage = () => {
   return (
     <>
       <Container>
-        <Header>Channel</Header>
+        <Header>DM 메세지</Header>
       </Container>
     </>
   );
 };
 
-export default Channel;
+export default DirectMessage;
