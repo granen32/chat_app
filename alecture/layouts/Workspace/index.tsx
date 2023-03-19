@@ -23,7 +23,7 @@ import gravatar from "gravatar";
 import loadable from "@loadable/component";
 
 const Channel = loadable(() => import("@pages/Channel"));
-const DirectMessage = loadable(() => import("@pages/Channel/DirectMessage"));
+const DirectMessage = loadable(() => import("@pages/DirectMessage"));
 
 const Workspace: FC = ({ children }) => {
   // FC 안에 칠드런이 안에 들어가있음 칠드런을 쓰는 컴포넌트면 VFC를 넣으면됨
