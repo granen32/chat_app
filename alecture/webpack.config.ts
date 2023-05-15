@@ -100,7 +100,7 @@ const config: Configuration = {
     proxy: {
       // 프론트엔드에서 api로 보내는 요청을 오리진을 3095로 바꿔서 보내겠다.
       "/api": {
-        target: "http://localhost:3095/",
+        target: "http://localhost:3095",
         changeOrigin: true,
       },
     },
@@ -109,9 +109,14 @@ const config: Configuration = {
 
 if (isDevelopment && config.plugins) {
   config.plugins.push(new webpack.HotModuleReplacementPlugin());
-  config.plugins.push(new ReactRefreshWebpackPlugin());
-}
-if (!isDevelopment && config.plugins) {
+  config.plugins.push(
+    new ReactRefreshWebpackPlugin({
+      overlay: {
+        useURLPolyfill: true,
+      },
+    })
+  );
+  // config.plugins.push(new BundleAnalyzerPlugin({ analyzerMode: 'server', openAnalyzer: false }));
 }
 
 export default config;
