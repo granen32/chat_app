@@ -38,9 +38,7 @@ const Workspace: FC = ({ children }) => {
       })
       .then((reponse) => mutate());
   }, []);
-  if (!data) {
-    return <Redirect to="/login" />;
-  }
+  if (!data) return <Redirect to="/login" />;
   return (
     <div>
       <Header>
